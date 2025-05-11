@@ -2,10 +2,19 @@
 
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
+use App\Models\siswa;
+use App\Models\guru;
+use App\Models\pkl;
+use App\Models\industri;
 
 Route::get('/', function () {
     return view('welcome');
 })->name('home');
+
+Route::view('/siswa', 'siswa', ['siswa' => Siswa::all()])->name('siswa');
+Route::view('/guru', 'guru', ['guru' => Guru::all()])->name('guru');
+Route::view('/pkl', 'pkl', ['pkl' => Pkl::all()])->name('pkl');
+Route::view('/industri', 'industri', ['industri' => Industri::all()])->name('industri');
 
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
