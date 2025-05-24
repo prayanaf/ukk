@@ -66,12 +66,10 @@ class GuruResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('nip')
                     ->searchable(),
-                Tables\Columns\BadgeColumn::make('gender')
-                    ->colors([
-                        'primary' => 'Laki-laki',
-                        'primary' => 'Perempuan',
-                    ])
-                    ->label('Gender'),                
+                Tables\Columns\TextColumn::make('gender')
+                    ->formatStateUsing(fn ($state) 
+                    => DB::select("SELECT getGenderCode(?) AS gender", 
+                    [$state])[0]->gender),                
                 Tables\Columns\TextColumn::make('alamat')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('kontak')

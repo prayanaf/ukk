@@ -35,9 +35,9 @@ class Pkl extends Model
     }
 
 //booted itu trigger laravel
-    public static function booted(): void { 
-        static::created(function (Pkl $pkl) {
-            $pkl->siswa->update(['status_pkl' => 1]);
-        });
-    }
+    // public static function booted(): void { 
+    //     static::created(function (Pkl $pkl) {
+    //         $pkl->siswa->update(['status_pkl' => 1]);
+    //     });
+    // }
 }
