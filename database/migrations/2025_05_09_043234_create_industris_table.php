@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('alamat');
             $table->string('kontak');
             $table->string('email');
+            $table->string('website')->nullable();
             $table->timestamps();
         });
     }

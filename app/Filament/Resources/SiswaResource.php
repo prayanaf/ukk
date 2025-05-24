@@ -40,8 +40,8 @@ class SiswaResource extends Resource
                 Forms\Components\Radio::make('gender')
                     ->label('Jenis Kelamin')
                     ->options([
-                        'Laki-laki' => 'Laki-laki',
-                        'Perempuan' => 'Perempuan',
+                        'L' => 'Laki-laki',
+                        'P' => 'Perempuan',
                     ])
                     ->required()
                     ->inline(),
@@ -55,7 +55,7 @@ class SiswaResource extends Resource
                     ->email()
                     ->required()
                     ->maxLength(255),
-                FileUpload::make('foto_siswa')
+                FileUpload::make('foto')
                     ->label('Foto Siswa')
                     ->image()
                     ->disk('public')

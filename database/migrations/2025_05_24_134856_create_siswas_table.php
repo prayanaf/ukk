@@ -15,11 +15,12 @@ return new class extends Migration
             $table->id();
             $table->string('nama');
             $table->string('nis')->unique();
-            $table->enum('gender', ['Laki-Laki', 'Perempuan']);
+            $table->enum('gender', ['L', 'P'])->default('L');
             $table->string('alamat');
-            $table->string('kontak');
+            $table->string('kontak')->unique();
             $table->string('email')->unique();
-            $table->boolean('status_pkl')->default(false);
+            $table->string('foto');
+            $table->boolean('status_pkl')->default(false);  
             $table->timestamps();
         });
     }

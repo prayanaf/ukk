@@ -2,31 +2,30 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
-class Siswa extends Model
+class siswa extends Model
 {
     use HasRoles;
+    protected $fillable = ['nama', 'nis', 'gender', 'alamat', 'kontak', 'email','foto', 'status_pkl'];
 
-    protected $fillable = [
-        'nama',
-        'nis',
-        'gender',
-        'alamat',
-        'kontak',
-        'email',
-        'status_pkl',
-        'foto_siswa', 
-    ];
 
-    protected $casts = [
-        'status_pkl' => 'boolean',
-    ];
+    public function getStatusPklLabelAttribute()
+    {
+        return $this->status_pkl ? 'Sedang PKL' : 'Belum PKL';
+    }
 
     public function pkl()
     {
-        return $this->hasOne(Pkl::class);
+        return $this->hasMany(pkl::class);
+    }
+
+    protected function foto(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($foto) => url('/storage/siswa/' . $foto),
+        );
     }
 }

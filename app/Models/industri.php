@@ -11,6 +11,7 @@ class Industri extends Model
 
     protected $fillable = [
         'nama',
+        'website',
         'bidang_usaha',
         'alamat',
         'kontak',
