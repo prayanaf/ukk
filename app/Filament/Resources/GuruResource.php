@@ -13,6 +13,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Imports\GuruImport;
+use Illuminate\Support\Facades\DB;
 
 // Tambahan use untuk fitur Import CSV
 use Filament\Tables\Actions\Action;
@@ -40,8 +41,8 @@ class GuruResource extends Resource
                 Forms\Components\Radio::make('gender')
                     ->label('Jenis Kelamin')
                     ->options([
-                        'Laki-laki' => 'Laki-laki',
-                        'Perempuan' => 'Perempuan',
+                        'L' => 'Laki-laki',
+                        'P' => 'Perempuan',
                     ])
                     ->required()
                     ->inline(),
@@ -85,16 +86,15 @@ class GuruResource extends Resource
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
-            ->filters([
-                //
-            ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->visible(fn () => auth()->user()->hasRole('super_admin')), // Hanya superadmin yang bisa edit
+                Tables\Actions\DeleteAction::make()
+                    ->visible(fn () => auth()->user()->hasRole('super_admin')), // Hanya superadmin yang bisa hapus
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()->visible(fn () => auth()->user()->hasRole('super_admin')),
                 ]),
             ])
             // Tambahan dimulai di sini
@@ -120,7 +120,8 @@ class GuruResource extends Resource
                             ->title('Data guru berhasil diimpor!')
                             ->success()
                             ->send();
-                    }),
+                        })
+                        ->visible(fn () => auth()->user()->hasRole('super_admin')), // Hanya superadmin yang bisa mengimpor CSV
             ]);
             // Tambahan selesai di sini
     }

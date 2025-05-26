@@ -54,3 +54,4 @@ Query OK, 0 rows affected (0.030 sec)
 - php artisan make:filament-user
 - php artisan shield:generate --all
 - php artisan shield:super-admin
+- npm run dev

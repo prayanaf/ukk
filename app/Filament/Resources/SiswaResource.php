@@ -10,9 +10,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Filament\Tables\Columns\BadgeColumn;
+use Illuminate\Support\Facades\DB;
 use Filament\Forms\Components\FileUpload;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Actions\Action;
@@ -31,31 +29,17 @@ class SiswaResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('nama')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('nis')
-                    ->required()
-                    ->maxLength(255),
+                Forms\Components\TextInput::make('nama')->required()->maxLength(255),
+                Forms\Components\TextInput::make('nis')->required()->maxLength(255),
                 Forms\Components\Radio::make('gender')
                     ->label('Jenis Kelamin')
-                    ->options([
-                        'L' => 'Laki-laki',
-                        'P' => 'Perempuan',
-                    ])
+                    ->options(['L' => 'Laki-laki', 'P' => 'Perempuan'])
                     ->required()
                     ->inline(),
-                Forms\Components\TextInput::make('alamat')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('kontak')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('email')
-                    ->email()
-                    ->required()
-                    ->maxLength(255),
-                FileUpload::make('foto')
+                Forms\Components\TextInput::make('alamat')->required()->maxLength(255),
+                Forms\Components\TextInput::make('kontak')->required()->maxLength(255),
+                Forms\Components\TextInput::make('email')->email()->required()->maxLength(255),
+                FileUpload::make('foto_siswa')
                     ->label('Foto Siswa')
                     ->image()
                     ->disk('public')
@@ -68,44 +52,29 @@ class SiswaResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('nama')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('nis')
-                    ->searchable(),
+                Tables\Columns\TextColumn::make('nama')->searchable(),
+                Tables\Columns\TextColumn::make('nis')->searchable(),
                 Tables\Columns\TextColumn::make('gender')
-                    ->formatStateUsing(fn ($state)
-                     => DB::select("SELECT getGenderCode(?) AS gender", 
-                     [$state])[0]->gender),
-                Tables\Columns\TextColumn::make('alamat')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('kontak')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('email')
-                    ->searchable(),
-                Tables\Columns\IconColumn::make('status_pkl')
-                    ->boolean(),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->formatStateUsing(fn ($state) => DB::select("SELECT getGenderCode(?) AS gender", [$state])[0]->gender),
+                Tables\Columns\TextColumn::make('alamat')->searchable(),
+                Tables\Columns\TextColumn::make('kontak')->searchable(),
+                Tables\Columns\TextColumn::make('email')->searchable(),
+                Tables\Columns\IconColumn::make('status_pkl')->boolean(),
+                Tables\Columns\TextColumn::make('created_at')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('updated_at')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\ImageColumn::make('foto_siswa')
                     ->label('Foto')
                     ->circular(),
             ])
-            ->filters([
-                //
-            ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->visible(fn () => auth()->user()->hasRole('super_admin')), // Hanya superadmin yang bisa edit
+                Tables\Actions\DeleteAction::make()
+                    ->visible(fn () => auth()->user()->hasRole('super_admin')), // Hanya superadmin yang bisa hapus
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()->visible(fn () => auth()->user()->hasRole('super_admin')),
                 ]),
             ])
             ->headerActions([
@@ -130,7 +99,8 @@ class SiswaResource extends Resource
                             ->title('Data siswa berhasil diimpor!')
                             ->success()
                             ->send();
-                    }),
+                    })
+                    ->visible(fn () => auth()->user()->hasRole('super_admin')), // Hanya superadmin yang bisa mengimpor CSV
             ]);
     }
 
@@ -146,4 +116,3 @@ class SiswaResource extends Resource
         return 'Data Siswa';
     }
 }
-

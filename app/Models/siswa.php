@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 class siswa extends Model
 {
     use HasRoles;
-    protected $fillable = ['nama', 'nis', 'gender', 'alamat', 'kontak', 'email','foto', 'status_pkl'];
+    protected $fillable = ['nama', 'nis', 'gender', 'alamat', 'kontak', 'email', 'status_pkl', 'foto_siswa'];
 
 
     public function getStatusPklLabelAttribute()
@@ -22,10 +22,10 @@ class siswa extends Model
         return $this->hasMany(pkl::class);
     }
 
-    protected function foto(): Attribute
-    {
-        return Attribute::make(
-            get: fn ($foto) => url('/storage/siswa/' . $foto),
-        );
-    }
+    // protected function fotoSiswa(): Attribute
+    // {
+    //     return Attribute::make(
+    //         get: fn ($foto) => url('/storage/siswa/' . $foto),
+    //     );
+    // }
 }
