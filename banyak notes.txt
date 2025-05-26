@@ -46,11 +46,11 @@ Query OK, 0 rows affected (0.030 sec)
 
 7. saat hbs clone dr github jgn lupa 
 - env
-- php artisan migrate
 - composer install
 - npm install
 - npm run build
 - php artisan key:generate
+- php artisan migrate
 - php artisan make:filament-user
 - php artisan shield:generate --all
 - php artisan shield:super-admin
