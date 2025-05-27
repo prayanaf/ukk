@@ -5,6 +5,7 @@ use Livewire\Volt\Volt;
 
 
 Route::get('/', function () {
+    // dd(auth()->user->roles);
     return view('welcome');
 })->name('home');
 
@@ -24,11 +25,11 @@ Route::get('/', function () {
 //membuat ujicoba dengan role siswa dapat akses fe
 Route::get('/siswa', function () {
     return "Siswa";
-})->middleware(['auth', 'verified','role:siswa','cek_user'])
+})->middleware(['auth', 'verified','role:Siswa','cek_user'])
  ->name('siswa');
 
 //membuat peraturan role siswa dapat akses fe
-Route::middleware(['auth', 'verified', 'role:siswa', 'cek_user'])->group(function () {
+Route::middleware(['auth', 'verified', 'role:Siswa','cek_user'])->group(function () {
     Route::view('dashboard', 'dashboard')->name('dashboard');
     Route::view('industri', 'industri')->name('industri');
 });

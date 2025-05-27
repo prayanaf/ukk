@@ -16,7 +16,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
             'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
             'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
-            'cek_user' => \App\Http\Middleware\cek_user::class,
+            'cek_user' => \App\Http\Middleware\cek_user::class, // Pastikan alias sesuai
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

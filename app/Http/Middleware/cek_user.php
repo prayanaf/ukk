@@ -12,22 +12,21 @@ class cek_user
 {
     /**
      * Handle an incoming request.
-     *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::check()) {
-            $UserEmail = Auth::user()->email;
-
-            //cek ketersediaan email user di tanel siswa
-            $siswa = Siswa::where('email', $UserEmail)->exists();
-
-            if (!$siswa) {
-                Auth::logout();//logout jika user tidak cocok
-                return redirect('/login')->with('error', 'Email tidak cocok dengan data di tabel siswa');
-            }
+        if (!Auth::check()) {
+            return redirect('/login')->with('error', 'Harap login terlebih dahulu.');
         }
+
+        $userEmail = Auth::user()->email;
+
+        // Cek apakah email user ada di tabel siswa
+        if (!Siswa::where('email', $userEmail)->exists()) {
+            Auth::logout(); // Logout user jika email tidak cocok
+            return redirect('/login')->with('error', 'Email tidak terdaftar sebagai siswa.');
+        }
+
         return $next($request);
     }
 }
